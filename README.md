@@ -12,6 +12,10 @@ Auschecken und `yarn` zum Installieren der Dependencies. Dann `yarn start`, um d
 
 Die Seite selbst ist unsere "Aufgabenliste" für den Workshop.
 
+## externe API zum Einbinden:
+
+https://jsonplaceholder.typicode.com/
+
 ## Links zu diesem Repo:
 
 ### Das Repo zum Clonen: https://github.com/phryneas/react-days-2022-modern-redux-workshop

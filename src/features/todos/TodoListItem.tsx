@@ -6,7 +6,7 @@ export function TodoListItem({ todo }: { todo: Todo }) {
       <label>
         <input
           type="checkbox"
-          checked={todo.done}
+          checked={todo.completed}
           aria-label="erledigt"
           onChange={(e) => {
             if (e.currentTarget.checked) {
