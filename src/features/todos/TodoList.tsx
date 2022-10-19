@@ -1,11 +1,17 @@
-import { useState } from "react";
-import { useAppSelector } from "../../app/hooks";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { TodoListItem } from "./TodoListItem";
-import { selectTodos } from "./todoSlice";
+import { fetchTodos, selectTodos } from "./todoSlice";
 
 export function TodoList() {
   const [showCompleted, setShowCompleted] = useState(true);
   const todos = useAppSelector((state) => selectTodos(state, showCompleted));
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const runningThunk = dispatch(fetchTodos({ page: 1 }));
+    return () => runningThunk.abort();
+  }, [dispatch]);
 
   return (
     <section>

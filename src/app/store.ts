@@ -5,6 +5,15 @@ export const store = configureStore({
   reducer: {
     todos: todoReducer,
   },
+  middleware(getDefaultMiddleware) {
+    return getDefaultMiddleware({
+      thunk: {
+        extraArgument: {
+          something: "hi",
+        },
+      },
+    });
+  },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

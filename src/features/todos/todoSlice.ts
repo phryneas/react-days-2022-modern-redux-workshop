@@ -4,60 +4,20 @@ import {
   createSlice,
   PayloadAction,
   createEntityAdapter,
+  createAsyncThunk,
 } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 
 const todosAdapter = createEntityAdapter<Todo>();
 
-const initialState = todosAdapter.addMany(todosAdapter.getInitialState(), [
-  {
-    id: 0,
-    title: "Store in `app.store.ts` anlegen",
-    completed: false,
-  },
-  {
-    id: 1,
-    title: "Für TypeScript-Nutzer: hooks in app/hooks.ts anlegen",
-    completed: false,
-  },
-  {
-    id: 2,
-    title: "Store in der `index.tsx` per `Provider` verdrahten",
-    completed: false,
-  },
-  {
-    id: 3,
-    title: "Slice in features/todos/todoSlice.ts anlegen",
-    completed: false,
-  },
-  { id: 4, title: "Slice im store registrieren", completed: false },
-  {
-    id: 5,
-    title: "TodoList: Daten mittels `useAppSelector` aus dem Store holen",
-    completed: false,
-  },
-  {
-    id: 6,
-    title:
-      "NewTodo: Formular mit einem Action-dispatch (Action creator aus dem Slice importiert, dispatch aus `useAppDispatch`) absenden",
-    completed: false,
-  },
-  {
-    id: 7,
-    title: "Todo: Todos unchecken und checken mittels Action-dispatch",
-    completed: false,
-  },
-  {
-    id: 8,
-    title: "Erledigte Todos ausblenden",
-    completed: false,
-  },
-  {
-    id: 9,
-    title: "Bei langeweile: Todo-Text editierbar machen oder Todos löschen",
-    completed: false,
-  },
-]);
+const initialState = todosAdapter.getInitialState({
+  status: "uninitialized" as
+    | "uninitialized"
+    | "pending"
+    | "fulfilled"
+    | "error",
+  error: undefined as unknown,
+});
 
 export const slice = createSlice({
   name: "todos",
@@ -74,6 +34,20 @@ export const slice = createSlice({
     },
     todoRemoved: todosAdapter.removeOne,
   },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchTodos.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(fetchTodos.fulfilled, (state, action) => {
+        state.status = "fulfilled";
+        todosAdapter.addMany(state, action.payload);
+      })
+      .addCase(fetchTodos.rejected, (state, action) => {
+        state.status = "error";
+        state.error = action.error;
+      });
+  },
 });
 
 export const { todoAdded, todoChecked, todoRemoved } = slice.actions;
@@ -89,6 +63,18 @@ export const selectTodos = createSelector(
   ],
   (todos, showCompleted) =>
     todos.filter((todo) => showCompleted || !todo.completed)
+);
+
+export const fetchTodos = createAsyncThunk(
+  "todos/fetch",
+  async ({ page }: { page: number }, thunkApi) => {
+    const result = await fetch(
+      `https://jsonplaceholder.typicode.com/todos?page=${page}`,
+      { signal: thunkApi.signal }
+    );
+    const data: Todo[] = await result.json();
+    return data;
+  }
 );
 
 export default slice.reducer;
