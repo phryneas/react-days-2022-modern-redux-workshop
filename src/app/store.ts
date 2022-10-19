@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import todoReducer from "../features/todos/todoSlice";
+import { api } from "./api";
 import { listener } from "./listenerMiddleware";
 
 export const store = configureStore({
   reducer: {
     todos: todoReducer,
+    [api.reducerPath]: api.reducer,
   },
   middleware(getDefaultMiddleware) {
     return getDefaultMiddleware({
@@ -13,7 +15,9 @@ export const store = configureStore({
           something: "hi",
         },
       },
-    }).concat(listener.middleware);
+    })
+      .concat(listener.middleware)
+      .concat(api.middleware);
   },
 });
 

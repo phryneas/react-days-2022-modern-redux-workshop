@@ -1,9 +1,11 @@
+import { useUpdateTodoMutation } from "../../app/api";
 import { useAppDispatch } from "../../app/hooks";
-import { todoChecked, todoRemoved } from "./todoSlice";
+import { todoRemoved } from "./todoSlice";
 import { Todo } from "./types";
 
 export function TodoListItem({ todo }: { todo: Todo }) {
   const dispatch = useAppDispatch();
+  const [trigger, result] = useUpdateTodoMutation();
 
   return (
     <article>
@@ -14,7 +16,10 @@ export function TodoListItem({ todo }: { todo: Todo }) {
           aria-label="erledigt"
           onChange={(e) => {
             if (e.currentTarget.checked) {
-              dispatch(todoChecked(todo.id));
+              trigger({
+                id: todo.id,
+                completed: true,
+              });
             } else {
               console.log(
                 "Todo als noch nicht erledigt markiert: %s",

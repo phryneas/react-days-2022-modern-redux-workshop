@@ -1,31 +1,36 @@
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useState } from "react";
+import { useGetAllTodosQuery } from "../../app/api";
 import { TodoListItem } from "./TodoListItem";
-import { fetchTodos, selectTodos } from "./todoSlice";
 
 export function TodoList() {
-  const [showCompleted, setShowCompleted] = useState(true);
-  const todos = useAppSelector((state) => selectTodos(state, showCompleted));
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const runningThunk = dispatch(fetchTodos({ page: 1 }));
-    return () => runningThunk.abort();
-  }, [dispatch]);
+  const [filter, setFilter] = useState("");
+  const result = useGetAllTodosQuery(
+    filter
+      ? {
+          title: filter,
+        }
+      : undefined
+  );
+  if (result.isUninitialized || result.isLoading) {
+    return <>loading</>;
+  }
+  if (result.isError) {
+    return <>error</>;
+  }
 
   return (
     <section>
       <h2>Todos</h2>
       <label>
+        Filter:
         <input
-          type="checkbox"
-          checked={showCompleted}
-          onChange={(e) => setShowCompleted(e.currentTarget.checked)}
+          type="text"
+          value={filter}
+          onChange={(e) => setFilter(e.currentTarget.value)}
         />
-        Show unselected
       </label>
       <ul>
-        {todos.map((todo) => (
+        {result.data.map((todo) => (
           <li key={todo.id}>
             <TodoListItem todo={todo} />
           </li>
