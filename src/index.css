@@ -20,7 +20,7 @@ ul li input[type="checkbox"] {
 }
 
 form {
-  max-width: 200px;
+  max-width: 300px;
   display: grid;
   grid-template-columns: min-content auto;
   gap: 10px;
@@ -31,7 +31,8 @@ form label {
   display: contents;
 }
 
-form input {
+form input,
+form button {
   grid-column: 2;
 }
 
