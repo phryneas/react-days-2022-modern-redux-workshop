@@ -1,6 +1,10 @@
+import { useAppDispatch } from "../../app/hooks";
+import { todoChecked } from "./todoSlice";
 import { Todo } from "./types";
 
 export function TodoListItem({ todo }: { todo: Todo }) {
+  const dispatch = useAppDispatch();
+
   return (
     <article>
       <label>
@@ -10,7 +14,7 @@ export function TodoListItem({ todo }: { todo: Todo }) {
           aria-label="erledigt"
           onChange={(e) => {
             if (e.currentTarget.checked) {
-              console.log("Todo als erledigt markiert: %s", todo.title);
+              dispatch(todoChecked(todo.id));
             } else {
               console.log(
                 "Todo als noch nicht erledigt markiert: %s",

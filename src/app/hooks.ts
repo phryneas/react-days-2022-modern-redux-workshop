@@ -1,9 +1,7 @@
-/* 
-In dieser Datei sollten `useAppDispatch` und `useAppSelector` definiert werden.
+import { useDispatch, useSelector } from "react-redux";
+import type { TypedUseSelectorHook } from "react-redux";
+import type { RootState, AppDispatch } from "./store";
 
-Wenn man kein TypeScript nutzt kann man auch direkt `useDispatch` und
-`useSelector` aus `react-redux` importieren und braucht diese Datei nicht.
- */
-
-// der Export ist nur da, damit die leere Datei keinen Fehler verursacht
-export {};
+// Use throughout your app instead of plain `useDispatch` and `useSelector`
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

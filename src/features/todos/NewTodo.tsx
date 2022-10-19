@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { useAppDispatch } from "../../app/hooks";
+import { todoAdded } from "./todoSlice";
 
 export function NewTodo() {
   // lokaler State wie ein Formular-State sollte lokal bleiben und nicht in Redux landen
   const [title, setTitle] = useState("");
   const [checked, setChecked] = useState(false);
+
+  const dispatch = useAppDispatch();
 
   return (
     <article>
@@ -11,7 +15,12 @@ export function NewTodo() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          console.log("Neues Todo mit den Werten %o", { title, checked });
+          dispatch(
+            todoAdded({
+              title,
+              completed: checked,
+            })
+          );
         }}
       >
         <label>
