@@ -42,6 +42,11 @@ export function TodoList() {
     },
     {
       id: 8,
+      title: "Erledigte Todos ausblenden",
+      completed: false,
+    },
+    {
+      id: 9,
       title: "Bei langeweile: Todo-Text editierbar machen oder Todos löschen",
       completed: false,
     },
