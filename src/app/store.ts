@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import todoReducer from "../features/todos/todoSlice";
+import { listener } from "./listenerMiddleware";
 
 export const store = configureStore({
   reducer: {
@@ -12,7 +13,7 @@ export const store = configureStore({
           something: "hi",
         },
       },
-    });
+    }).concat(listener.middleware);
   },
 });
 

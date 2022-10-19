@@ -7,6 +7,7 @@ import {
   createAsyncThunk,
 } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
+import { startAppListening } from "../../app/listenerMiddleware";
 
 const todosAdapter = createEntityAdapter<Todo>();
 
@@ -76,5 +77,17 @@ export const fetchTodos = createAsyncThunk(
     return data;
   }
 );
+
+startAppListening({
+  predicate(action, currentState, originalState) {
+    return todosSelectors.selectAll(currentState).some((newTodo) => {
+      const oldTodo = todosSelectors.selectById(originalState, newTodo.id);
+      return !oldTodo;
+    });
+  },
+  effect(action) {
+    console.log("because of the action %o, a new todo was added", action);
+  },
+});
 
 export default slice.reducer;
