@@ -1,5 +1,5 @@
 import { useAppDispatch } from "../../app/hooks";
-import { todoChecked } from "./todoSlice";
+import { todoChecked, todoRemoved } from "./todoSlice";
 import { Todo } from "./types";
 
 export function TodoListItem({ todo }: { todo: Todo }) {
@@ -25,6 +25,7 @@ export function TodoListItem({ todo }: { todo: Todo }) {
         />
         {todo.title}
       </label>
+      <button onClick={() => dispatch(todoRemoved(todo.id))}>delete</button>
     </article>
   );
 }

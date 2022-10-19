@@ -17,6 +17,7 @@ export function NewTodo() {
           e.preventDefault();
           dispatch(
             todoAdded({
+              id: Math.random() * 10000,
               title,
               completed: checked,
             })

@@ -1,13 +1,15 @@
 import { Todo } from "./types";
 import {
-  Action,
   createSelector,
   createSlice,
   PayloadAction,
+  createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 
-const initialState: Todo[] = [
+const todosAdapter = createEntityAdapter<Todo>();
+
+const initialState = todosAdapter.addMany(todosAdapter.getInitialState(), [
   {
     id: 0,
     title: "Store in `app.store.ts` anlegen",
@@ -55,37 +57,34 @@ const initialState: Todo[] = [
     title: "Bei langeweile: Todo-Text editierbar machen oder Todos löschen",
     completed: false,
   },
-];
+]);
 
 export const slice = createSlice({
   name: "todos",
   initialState,
   reducers: {
-    todoAdded(
-      state,
-      action: PayloadAction<{ title: string; completed: boolean }>
-    ) {
-      const newId = state.length;
-      state.push({
-        id: newId,
-        title: action.payload.title,
-        completed: action.payload.completed,
+    todoAdded: todosAdapter.addOne,
+    todoChecked(state, action: PayloadAction<number>) {
+      todosAdapter.updateOne(state, {
+        id: action.payload,
+        changes: {
+          completed: true,
+        },
       });
     },
-    todoChecked(state, action: PayloadAction<number>) {
-      const todo = state.find((todo) => todo.id === action.payload);
-      if (todo) {
-        todo.completed = true;
-      }
-    },
+    todoRemoved: todosAdapter.removeOne,
   },
 });
 
-export const { todoAdded, todoChecked } = slice.actions;
+export const { todoAdded, todoChecked, todoRemoved } = slice.actions;
+
+const todosSelectors = todosAdapter.getSelectors(
+  (state: RootState) => state.todos
+);
 
 export const selectTodos = createSelector(
   [
-    (state: RootState) => state.todos,
+    todosSelectors.selectAll,
     (state: RootState, showCompleted: boolean) => showCompleted,
   ],
   (todos, showCompleted) =>
