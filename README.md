@@ -4,7 +4,7 @@
 
 ## Zum Trainer:
 
-[siehe `whoami.md`](./whoami.ms)
+[siehe `whoami.md`](./whoami.md)
 
 ## Zum Repo:
 
